@@ -10,7 +10,7 @@ class buttonWidget extends StatelessWidget {
       height: 50,
       width: 280,
       child: ElevatedButton(onPressed: (){
-        print('Connection sent');
+        print('Hello World');
       },
         child: Text('Connect', style: TextStyle(fontSize: 25, color: Colors.white),),
         style: ElevatedButton.styleFrom(

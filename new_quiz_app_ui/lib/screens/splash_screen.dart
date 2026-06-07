@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quiz_app/screen/home_page.dart';
+import 'package:new_quiz_app_ui/screens/home_page.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -15,20 +16,14 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: .center,
           children: [
-            Icon(Icons.quiz,
-              size: 100,
-              color: Colors.blue,
-            ),
-            SizedBox(height: 10,),
+            Icon(Icons.quiz, size: 100, color: Colors.blue,),
             Text('Quiz App', style: TextStyle(fontSize: 30, fontWeight: .w800),),
+
             SizedBox(height: 40,),
             ElevatedButton(onPressed: (){
-
-              // moving one page to another page
-              Navigator.push(context, MaterialPageRoute(builder: (_)=>HomePage()));
-
-            }, child: Text('Enter', style: TextStyle(color: Colors.blue,))
-            )
+              Navigator.push(context, MaterialPageRoute(builder: (_) => HomePage()));
+            },
+                child: Text('Enter', style: TextStyle(color: Colors.blue),))
           ],
         ),
       ),
