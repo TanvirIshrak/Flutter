@@ -79,7 +79,9 @@ class _QuizState extends State<Quiz> {
               child: SizedBox(
                 height: 60,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    print('Hello World');
+                  },
                   child: Text('Previous'),
                 ),
               ),
@@ -89,7 +91,11 @@ class _QuizState extends State<Quiz> {
             Expanded(
               child: SizedBox(
                 height: 60,
-                child: ElevatedButton(onPressed: () {}, child: Text('Next')),
+                child: ElevatedButton(
+                    onPressed: () {
+                      print('Hello World');
+                },
+                    child: Text('Next')),
               ),
             ),
           ],
