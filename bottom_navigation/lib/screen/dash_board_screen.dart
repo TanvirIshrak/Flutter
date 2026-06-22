@@ -21,6 +21,7 @@ class _DashBoardState extends State<DashBoard> {
       // appBar: AppBar(title: Text('Dash Board'),),
       body: screens[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
+          selectedItemColor: Colors.blue,
           onTap: (index){
             setState(() {
                 currentIndex= index;
