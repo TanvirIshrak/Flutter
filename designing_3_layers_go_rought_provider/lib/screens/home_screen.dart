@@ -15,32 +15,35 @@ class _HomeScreenState extends State<HomeScreen> {
     return  Scaffold(
       appBar: AppBar(title: Text("Home Screen"),),
 
-      body: Column(
-        mainAxisAlignment: .center,
-        children: [
-          Icon(Icons.flutter_dash, size: 120,),
-          SizedBox(height: 20,),
-          
-          Text("Welcome to my Flutter app",
-            style: TextStyle(fontSize: 20, fontWeight: .bold),
-          ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 18.0),
+        child: Column(
+          mainAxisAlignment: .center,
+          children: [
+            Icon(Icons.flutter_dash, size: 120,),
+            SizedBox(height: 20,),
 
-          SizedBox(height: 20,),
-          CustomButton(
-              text: 'Profile Screen',
-              onPressed: (){
-                context.push('/profile');
-              }
-          ),
-          SizedBox(height: 20,),
-          CustomButton(
-              text: 'Settings Screen',
-              onPressed: (){
-                context.push('/settings');
-              }
-          ),
+            Text("Welcome to my Flutter app",
+              style: TextStyle(fontSize: 20, fontWeight: .bold),
+            ),
 
-        ],
+            SizedBox(height: 20,),
+            CustomButton(
+                text: 'Profile Screen',
+                onPressed: (){
+                  context.push('/profile');
+                }
+            ),
+            SizedBox(height: 20,),
+            CustomButton(
+                text: 'Settings Screen',
+                onPressed: (){
+                  context.push('/settings');
+                }
+            ),
+
+          ],
+        ),
       ),
     );
   }

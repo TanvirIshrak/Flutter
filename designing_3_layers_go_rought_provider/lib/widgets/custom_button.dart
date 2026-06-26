@@ -15,7 +15,19 @@ class CustomButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       height: 50 ,
-      child: ElevatedButton(onPressed: onPressed, child: Text(text)),
+      child: ElevatedButton(
+          style: ButtonStyle(
+            animationDuration: const Duration(milliseconds: 200),
+            backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+                if( states.contains(WidgetState.hovered) || states.contains(WidgetState.pressed)){
+                return Colors.blueAccent;
+              }
+              return Colors.lightBlueAccent;
+              },
+            ),
+          ),
+          onPressed: onPressed,
+          child: Text(text)),
     );
   }
 }
