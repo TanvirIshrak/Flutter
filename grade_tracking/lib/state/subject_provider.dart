@@ -35,8 +35,14 @@ class SubjectProvider extends ChangeNotifier {
     if (_subjects.isEmpty) return '-';
     final avg = averageMark;
     if (avg >= 80) return 'A+';
+    if (avg >= 75) return 'A';
+    if (avg >= 70) return 'A-';
     if (avg >= 65) return 'B';
+    if (avg >= 60) return 'B-';
     if (avg >= 55) return 'C';
+    if (avg >= 50) return 'C-';
+    if (avg >= 45) return 'D';
+    if (avg >= 40) return 'D-';
     return 'F';
   }
 }
