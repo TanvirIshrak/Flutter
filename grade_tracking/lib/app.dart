@@ -1,0 +1,25 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'screens/splash_screen.dart';
+import 'theme/app_themes.dart';
+import 'ui/home_shell.dart';
+
+class GradeTrackingApp extends StatelessWidget {
+  const GradeTrackingApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<ThemeModeController>(
+      builder: (context, themeCtrl, _) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: AppThemes.lightTheme(),
+          darkTheme: AppThemes.darkTheme(),
+          themeMode: themeCtrl.themeMode,
+          home: const SplashScreen(),
+        );
+      },
+    );
+  }
+}
