@@ -24,22 +24,23 @@ class HomeShell extends StatelessWidget {
                   onPressed: themeCtrl.toggle,
                   icon: Icon(
                     themeCtrl.isDark ? Icons.dark_mode : Icons.light_mode,
-                    color: theme.colorScheme.onPrimary,
+                    // color: theme.colorScheme.onPrimary,
+                    color: Colors.indigo
                   ),
                 );
               },
             ),
           ],
-          bottom: const TabBar(
-            tabs: [
-              Tab(icon: Icon(Icons.add), text: 'Add'),
-              Tab(icon: Icon(Icons.list), text: 'List'),
-              Tab(icon: Icon(Icons.summarize), text: 'Summary'),
-            ],
-          ),
         ),
         body: const TabBarView(
           children: [AddSubjectScreen(), SubjectListScreen(), SummaryScreen()],
+        ),
+        bottomNavigationBar: const TabBar(
+          tabs: [
+            Tab(icon: Icon(Icons.add), text: 'Add'),
+            Tab(icon: Icon(Icons.list), text: 'List'),
+            Tab(icon: Icon(Icons.summarize), text: 'Summary'),
+          ],
         ),
       ),
     );

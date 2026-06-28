@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:grade_tracking/screens/add_subject_screen.dart';
-import 'package:grade_tracking/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
+
 import 'screens/splash_screen.dart';
 import 'theme/app_themes.dart';
 import 'ui/home_shell.dart';
