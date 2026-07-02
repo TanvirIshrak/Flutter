@@ -8,7 +8,7 @@ class AppThemes {
 
   static ThemeData darkTheme() {
     final scheme = ColorScheme.fromSeed(
-      seedColor: Colors.indigo,
+      seedColor: Colors.indigoAccent,
       brightness: Brightness.dark,
     );
     return ThemeData(colorScheme: scheme, useMaterial3: true);

@@ -51,7 +51,9 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
                   return null;
                 },
               ),
+
               const SizedBox(height: 16),
+
               TextFormField(
                 controller: _markController,
                 decoration: InputDecoration(
@@ -76,7 +78,9 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
                   return null;
                 },
               ),
+
               const SizedBox(height: 20),
+
               FilledButton.icon(
                 icon: const Icon(Icons.add),
                 onPressed: () {
