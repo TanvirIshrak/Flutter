@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "646168085045",
+    "project_id": "login-logout-taskadd-post",
+    "storage_bucket": "login-logout-taskadd-post.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:646168085045:android:024a83b4b8f8ab60d7a77c",
+        "android_client_info": {
+          "package_name": "com.example.login_logout_taskadd_post"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZjbnZTBibQopta0zFstmuM-QGtW7Sh_A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
