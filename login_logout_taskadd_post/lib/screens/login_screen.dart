@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:login_logout_taskadd_post/screens/home_screen.dart';
+import 'package:login_logout_taskadd_post/screens/register_screen.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -32,7 +34,12 @@ Future<void> _signIn() async {
       password: _passwordController.text,
     );
     // Navigation is handled by auth state listener in main.dart
-  } on FirebaseAuthException catch (e) {
+    print('Successfull');
+    if(mounted){
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen()),);
+    }
+  } 
+  on FirebaseAuthException catch (e) {
     String message;
     switch (e.code) {
       case 'user-not-found':
@@ -153,9 +160,7 @@ Future<void> _signIn() async {
                     Align(
                       alignment: Alignment.centerRight,
                           child: TextButton(
-                          onPressed: () {
-
-                          },
+                          onPressed: () =>_showForgotPasswordDialog(),
                       child: const Text('Forgot Password?'),
                       ),
                     ),
@@ -165,27 +170,96 @@ Future<void> _signIn() async {
                     FilledButton(
                       onPressed: _isLoading ? null : _signIn,
                       style: FilledButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 80),
                       ),
-                      child: _isLoading
-                          ? const SizedBox(
+                      child: _isLoading ? const SizedBox(
                         height: 20,
-                        width: 20,
+                        width: 40,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
                           color: Colors.white,
                         ),
                       )
-                          : const Text('Sign In', style: TextStyle(fontSize: 16)),
+                          : const Text('Sign In', style: TextStyle(fontSize: 18)),
                     ),
                     const SizedBox(height: 24),
 
+                    //register link
+                    Row(
+                      mainAxisAlignment: .center,
+                      children: [
+                        Text("Don't have any account?"),
+                        TextButton(
+                          onPressed: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=> RegisterScreen(),
+                            ),
+                            );
+                          },
+                          child: Text('Register'),
+                        )
+
+                      ],
+                    )
 
                   ],
                 ),
               ),
             ),
           )
+      )
+    );
+  }
+
+
+  void _showForgotPasswordDialog(){
+    final resetEmailController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Reset Password'),
+        content: TextFormField(
+          controller: resetEmailController,
+          keyboardType: .emailAddress,
+          decoration: InputDecoration(
+            labelText: "E-mail",
+            hintText: 'Enter your email address',
+            border: OutlineInputBorder()
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: ()=> Navigator.pop(context),
+              child: Text('Cancel')
+          ),
+
+        FilledButton(
+            onPressed: () async{
+              if(resetEmailController.text.isNotEmpty){
+                try{
+                  await FirebaseAuth.instance.sendPasswordResetEmail(
+                      email: resetEmailController.text.trim());
+                  if(context.mounted){
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Password reset email sent!'),
+                              backgroundColor: Colors.green,
+                      ),
+                    );
+                  }
+                }
+                on FirebaseAuthException catch (e){
+                  if(context.mounted){
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(e.message?? "An error occured"),
+                                backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                }
+              }
+            }, child: Text("Send"))
+        ],
+
       )
     );
   }
