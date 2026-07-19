@@ -34,7 +34,6 @@ Future<void> _signIn() async {
       password: _passwordController.text,
     );
     // Navigation is handled by auth state listener in main.dart
-    print('Successfull');
     if(mounted){
       Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen()),);
     }
@@ -174,7 +173,7 @@ Future<void> _signIn() async {
                       ),
                       child: _isLoading ? const SizedBox(
                         height: 20,
-                        width: 40,
+                        width: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
                           color: Colors.white,

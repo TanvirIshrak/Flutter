@@ -232,7 +232,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         child: _isLoading? SizedBox(
                             height: 20,
-                            width: 10,
+                            width: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
                               color: Colors.white,
