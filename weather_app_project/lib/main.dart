@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           '/login': (_) => const LoginPage(), //creating login screen route
           '/home': (_) => const HomeScreen(), // creating homescreen route
         },
-        initialRoute: isLoggedIn ? '/home' : '/login'
+          initialRoute: isLoggedIn ? '/home' : '/login'
     );
   }
 }
