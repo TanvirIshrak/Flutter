@@ -1,68 +1,102 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:jamat_e_islami_books_store/components/PrimaryButton.dart';
-import 'package:jamat_e_islami_books_store/config/colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:jamat_e_islami_books_store/Models/Data.dart';
+import 'package:jamat_e_islami_books_store/pages/HomePage/Widgets/AppBar.dart';
+import 'package:jamat_e_islami_books_store/pages/HomePage/Widgets/CategoryWidget.dart';
+import 'package:jamat_e_islami_books_store/pages/HomePage/Widgets/InputTextField.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class Homepage extends StatefulWidget {
+  const Homepage({super.key});
 
+  @override
+  State<Homepage> createState() => _HomepageState();
+}
+
+class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(title: Text('Home Page'),),
       body: Column(
-          children: [
-            Container(
-              height: 600,
-              color: Theme.of(context).colorScheme.primary,
+        children: [
+          // upper blue bar container
+          Container(
+            padding: EdgeInsets.all(10),
+            color: Theme.of(context).colorScheme.primary,
+            height: 400,
+            child: Expanded(
               child: Row(
-                mainAxisAlignment: .center,
                 children: [
-                  Flexible(
+                  Expanded(
                     child: Column(
-                      mainAxisAlignment: .center,
                       children: [
-                        // Text("Welcome to Homepage")
-                        Image.asset(
-                          "Assets/Images/book.png",
-                          width: 300,
-                        ),
-                        SizedBox(height: 20,),
-                        Text("E-Book store",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: .bold
-                          ),
-                        ),
-                        Text("Here is the ultimate book store to read books without any problem ",
-                            // "any hassle ",
-                            textAlign: .center,
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: Theme.of(context).colorScheme.background
+                        SizedBox(height: 60,),
+
+                        // Adding home app bar => pages/HomePage/Widgets/AppBar.dart
+                        HomeAppbar(),
+
+                        SizedBox(height: 35,),
+                        Row(
+                          children: [
+                            Text(
+                                'Good Morning, ',
+                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  color: Theme.of(context).colorScheme.background
+                                )
                             ),
+                            Text(
+                              "Ishrak",
+                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  color: Theme.of(context).colorScheme.background
+                              )
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                  "Time to read book and enhance your knowledge",
+                                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                      color: Theme.of(context).colorScheme.background
+                                  )
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        SizedBox(height: 35,),
+
+                        // Adding search bar => pages/HomePage/Widgets/InputTextField.dart
+                        InputTextField(),
+
+                        SizedBox(height: 20,),
+                        Row(
+                          children: [
+                            Text("Topics", style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.background
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 15,),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            // categoryData => lib/Models/Data.dart
+                            // here i just called the model and the widget to a list to make the same thing in a row
+                            children: categoryData.map((e) => CategoryWidget(iconPath: e["icon"]!, buttonName: e["lebel"]!,)).toList()
+
+                          ),
                         )
                       ],
                     ),
                   )
                 ],
-                
               ),
             ),
-            SizedBox(height: 30,),
-            // Spacer(),
-            Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: PrimaryButton(
-                  buttonName: "Enter into the library",
-                  onPressed: (){}
-              )
-            )
-
-          ],
-        ),
-
-
+          )
+        ],
+      ),
     );
   }
 }

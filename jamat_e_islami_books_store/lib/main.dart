@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jamat_e_islami_books_store/config/Theme.dart';
-import 'package:jamat_e_islami_books_store/pages/HomePage.dart';
+import 'package:jamat_e_islami_books_store/pages/WelcomePage.dart';
 
 void main() {
   runApp(const MyApp());  
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       title: 'Jamat e Islami E-Book',
       debugShowCheckedModeBanner: false,
       theme: lightTheme,
-      home: const HomePage(),
+      home: const WelcomePage(),
     );
   }
 }
