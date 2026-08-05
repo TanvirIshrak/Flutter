@@ -13,10 +13,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Jamat e Islami E-Book',
+      title: 'Islamic E-Book',
       debugShowCheckedModeBanner: false,
       theme: lightTheme,
       home: const WelcomePage(),
+
     );
   }
 }

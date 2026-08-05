@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jamat_e_islami_books_store/Models/Data.dart';
+import 'package:jamat_e_islami_books_store/components/BookCard.dart';
 import 'package:jamat_e_islami_books_store/pages/HomePage/Widgets/AppBar.dart';
 import 'package:jamat_e_islami_books_store/pages/HomePage/Widgets/CategoryWidget.dart';
 import 'package:jamat_e_islami_books_store/pages/HomePage/Widgets/InputTextField.dart';
@@ -94,7 +95,38 @@ class _HomepageState extends State<Homepage> {
                 ],
               ),
             ),
+          ),
+
+          SizedBox(height: 10,),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Text("Trending", style: Theme.of(context).textTheme.labelMedium,)
+                  ],
+                ),
+                SizedBox(height: 10,),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children:
+                      // eitar somoi children er [] dewa jabena
+                      bookData.map((e) => BookCard(
+                        title: e.title!,
+                        coverURL: e.bookurl!,
+                        onPressed: (){},
+                      )).toList()
+
+                  ),
+                )
+              ],
+            ),
           )
+
+
+
         ],
       ),
     );
