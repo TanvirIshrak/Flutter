@@ -18,7 +18,7 @@ class BookModel {
       String? id, 
       String? title, 
       String? description, 
-      num? rating, 
+      double? rating,
       num? pages, 
       String? language, 
       String? audiolen, 
@@ -27,7 +27,7 @@ class BookModel {
       String? bookurl, 
       String? audiourl, 
       String? category, 
-      num? price, 
+      String? price,
       num? numberOfRatings,}){
     _id = id;
     _title = title;
@@ -41,7 +41,7 @@ class BookModel {
     _bookurl = bookurl;
     _audiourl = audiourl;
     _category = category;
-    _price = price;
+    _price = price ;
     _numberOfRatings = numberOfRatings;
 }
 
@@ -64,7 +64,7 @@ class BookModel {
   String? _id;
   String? _title;
   String? _description;
-  num? _rating;
+  double? _rating;
   num? _pages;
   String? _language;
   String? _audiolen;
@@ -73,12 +73,12 @@ class BookModel {
   String? _bookurl;
   String? _audiourl;
   String? _category;
-  num? _price;
+  String? _price;
   num? _numberOfRatings;
 BookModel copyWith({  String? id,
   String? title,
   String? description,
-  num? rating,
+  double? rating,
   num? pages,
   String? language,
   String? audiolen,
@@ -87,7 +87,7 @@ BookModel copyWith({  String? id,
   String? bookurl,
   String? audiourl,
   String? category,
-  num? price,
+  String? price,
   num? numberOfRatings,
 }) => BookModel(  id: id ?? _id,
   title: title ?? _title,
@@ -107,7 +107,7 @@ BookModel copyWith({  String? id,
   String? get id => _id;
   String? get title => _title;
   String? get description => _description;
-  num? get rating => _rating;
+  double? get rating => _rating;
   num? get pages => _pages;
   String? get language => _language;
   String? get audiolen => _audiolen;
@@ -116,7 +116,7 @@ BookModel copyWith({  String? id,
   String? get bookurl => _bookurl;
   String? get audiourl => _audiourl;
   String? get category => _category;
-  num? get price => _price;
+  String? get price => _price;
   num? get numberOfRatings => _numberOfRatings;
 
   Map<String, dynamic> toJson() {
