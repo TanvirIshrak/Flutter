@@ -41,6 +41,7 @@ class BookCard extends StatelessWidget {
               SizedBox(height: 10,),
               Text(
                 title,
+                maxLines: 1,  // to solve line overflow issue
                 textAlign: .center,
                 style: Theme.of(context).textTheme.bodySmall,
               )

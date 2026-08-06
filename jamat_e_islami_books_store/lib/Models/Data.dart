@@ -24,7 +24,7 @@ var bookData = [
   // lib/Models/BookModel.dart
   BookModel(
     id: "1",
-    title: "Islami Jagoroner tin Pothikrit",
+    title: "Islami Jagoroner tin Pothikrit ",
     description: "",
     aboutauthor: "",
     audiolen: "20",

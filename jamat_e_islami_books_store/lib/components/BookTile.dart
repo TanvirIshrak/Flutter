@@ -49,7 +49,7 @@ class BookTile  extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: .start,
                     children: [
-                      Text(title, style: Theme.of(context).textTheme.bodyMedium,),
+                      Text(title,maxLines: 2, style: Theme.of(context).textTheme.bodyMedium,),
                       Text("By: ${author}",style: Theme.of(context).textTheme.labelSmall),
                       SizedBox(height: 3,),
                       Text("Price: ${price}",style: Theme.of(context).textTheme.titleSmall?.copyWith(
