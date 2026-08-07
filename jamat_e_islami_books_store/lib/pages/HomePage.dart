@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jamat_e_islami_books_store/Models/Data.dart';
 import 'package:jamat_e_islami_books_store/components/BookCard.dart';
 import 'package:jamat_e_islami_books_store/components/BookTile.dart';
+import 'package:jamat_e_islami_books_store/pages/BookDetails/BookDetails.dart';
 import 'package:jamat_e_islami_books_store/pages/HomePage/Widgets/AppBar.dart';
 import 'package:jamat_e_islami_books_store/pages/HomePage/Widgets/CategoryWidget.dart';
 import 'package:jamat_e_islami_books_store/pages/HomePage/Widgets/InputTextField.dart';
@@ -15,6 +16,8 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  get Get => null;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,7 +133,10 @@ class _HomepageState extends State<Homepage> {
                       bookData.map((e) => BookCard(
                           title: e.title!,
                           coverURL: e.bookurl!,
-                          onPressed: () {},
+                          onPressed: () {
+                            // Get.to(BookDetails());
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>BookDetails()));
+                          },
                         ),
                       ).toList(),
                     ),
