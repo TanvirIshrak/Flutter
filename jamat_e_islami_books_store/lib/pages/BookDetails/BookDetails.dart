@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:jamat_e_islami_books_store/Models/BookModel.dart';
 import 'package:jamat_e_islami_books_store/components/AppBackButton.dart';
 import 'package:jamat_e_islami_books_store/config/colors.dart';
 import 'package:jamat_e_islami_books_store/pages/BookDetails/BookActionButton.dart';
 import 'package:jamat_e_islami_books_store/pages/BookDetails/Header.dart';
 class BookDetails extends StatelessWidget {
-  const BookDetails({super.key});
+  final BookModel book;
+  const BookDetails({super.key, required this.book});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,16 @@ class BookDetails extends StatelessWidget {
                 children: [
                   Expanded(
                     // lib / pages/ BookDetails/ Header.dart
-                    child: HeaderDetails()
+                    child: HeaderDetails(
+                      coverURL: book.bookurl ?? "",
+                      title: book.title ?? "",
+                      author: book.author ?? "",
+                      description: book.description ?? "",
+                      rating: book.rating?.toString() ?? "0",
+                      pages: book.pages?.toInt() ?? 0,
+                      language: book.language ?? "BAN",
+                      audio: book.audiolen ?? "0",
+                    )
                   )
 
                 ],
@@ -41,7 +52,8 @@ class BookDetails extends StatelessWidget {
                   Row(
                     children: [
                       Flexible(
-                        child: Text("মূলত রাজনৈতিক ও ঐতিহাসিক প্রেক্ষাপটে রচিত একটি পরিচিত বই, যার লেখক জামায়াতে ইসলামীর সাবেক আমীর অধ্যাপক গোলাম আযম।",
+                        child: Text(
+                          book.description ?? "No description available",
                           style: Theme.of(context).textTheme.labelSmall,
                         ),
                       ),
@@ -57,7 +69,8 @@ class BookDetails extends StatelessWidget {
                   Row(
                     children: [
                       Flexible(
-                        child: Text("লেখক জামায়াতে ইসলামীর সাবেক আমীর অধ্যাপক গোলাম আযম।",
+                        child: Text(
+                          book.aboutauthor ?? "No author description available",
                           style: Theme.of(context).textTheme.labelSmall,
                         ),
                       ),

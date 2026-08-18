@@ -119,6 +119,10 @@ BookModel copyWith({  String? id,
   String? get price => _price;
   num? get numberOfRatings => _numberOfRatings;
 
+  String? get coverURL => _bookurl;
+
+  String? get audio => _audiolen;
+
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = _id;

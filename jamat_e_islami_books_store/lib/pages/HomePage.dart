@@ -135,7 +135,7 @@ class _HomepageState extends State<Homepage> {
                           coverURL: e.bookurl!,
                           onPressed: () {
                             // Get.to(BookDetails());
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>BookDetails()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>BookDetails(book: e,)));
                           },
                         ),
                       ).toList(),
