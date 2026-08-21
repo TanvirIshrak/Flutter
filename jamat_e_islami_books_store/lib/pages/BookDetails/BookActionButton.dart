@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jamat_e_islami_books_store/pages/BookPage/BookPage.dart';
 class BookActionButton extends StatelessWidget {
-  const BookActionButton({super.key});
+  final String bookUrl;
+  const BookActionButton({super.key, required this.bookUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class BookActionButton extends StatelessWidget {
             padding: const EdgeInsets.only(left: 10),
             child: InkWell(
               onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=> BookPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> BookPage(bookUrl: bookUrl,)));
               },
               child: Row(
                 children: [

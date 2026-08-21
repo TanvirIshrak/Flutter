@@ -79,7 +79,7 @@ class BookDetails extends StatelessWidget {
                   SizedBox(height: 30,),
 
                   // lib/pages/BookDetails/BookActionButton.dart
-                  BookActionButton()
+                  BookActionButton(bookUrl: book.bookurl!)
                 ],
               ),
             )

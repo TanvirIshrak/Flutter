@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:jamat_e_islami_books_store/pages/ProfilePage/ProfilePage.dart';
 class HomeAppbar extends StatelessWidget {
   const HomeAppbar({super.key});
 
@@ -16,11 +17,18 @@ class HomeAppbar extends StatelessWidget {
                 color: Theme.of(context).colorScheme.background
             )
         ),
-        CircleAvatar(
-          backgroundColor: Theme.of(context).colorScheme.background,
-          child: Text(
-            'N',
-            style: TextStyle(color: Colors.black,),),
+        InkWell(
+          onTap: (){
+            // Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilPage()));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilPage()),);
+          },
+          child: CircleAvatar(
+            
+            backgroundColor: Theme.of(context).colorScheme.background,
+            child: Text(
+              'N',
+              style: TextStyle(color: Colors.black,),),
+          ),
         )
       ],
     );

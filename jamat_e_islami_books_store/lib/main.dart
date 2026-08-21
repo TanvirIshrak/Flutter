@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jamat_e_islami_books_store/config/Theme.dart';
-import 'package:jamat_e_islami_books_store/pages/WelcomePage.dart';
+import 'package:jamat_e_islami_books_store/pages/WelcomePage/WelcomePage.dart';
 
 void main() {
   runApp(const MyApp());  

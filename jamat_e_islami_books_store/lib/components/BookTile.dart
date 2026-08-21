@@ -7,14 +7,15 @@ class BookTile  extends StatelessWidget {
   final String price;
   final double rating;
   final num totalRating;
-  const BookTile ({super.key, required this.title, required this.coverURL, required this.author, required this.price, required this.rating, required this.totalRating});
+  final VoidCallback? onPressed;
+  const BookTile ({super.key, required this.title, required this.coverURL, required this.author, required this.price, required this.rating, required this.totalRating, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: InkWell(
-        onTap: () {},
+        onTap: onPressed,
         child: Container(
           padding: EdgeInsets.all(10),
           // color: Theme.of(context).colorScheme.primary.withOpacity(0.2),

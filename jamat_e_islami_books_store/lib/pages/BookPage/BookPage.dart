@@ -7,7 +7,9 @@ import 'package:jamat_e_islami_books_store/controller/PDFController.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class BookPage extends StatefulWidget {
-  const BookPage({super.key});
+  final String bookUrl;
+  
+  const BookPage({super.key, required this.bookUrl});
 
   @override
   State<BookPage> createState() => _BookPageState();
@@ -42,7 +44,7 @@ class _BookPageState extends State<BookPage> {
         ),
       ),
       body: SfPdfViewer.network(
-        'https://cdn.syncfusion.com/content/PDFViewer/flutter-succinctly.pdf',
+        widget.bookUrl,
         key: pdfController.pdfViewerKey,
       ),
     );
