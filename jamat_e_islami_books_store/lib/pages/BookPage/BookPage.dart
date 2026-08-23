@@ -8,7 +8,7 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class BookPage extends StatefulWidget {
   final String bookUrl;
-  
+
   const BookPage({super.key, required this.bookUrl});
 
   @override

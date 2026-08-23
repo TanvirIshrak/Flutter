@@ -4,6 +4,7 @@ import 'package:jamat_e_islami_books_store/Models/Data.dart';
 import 'package:jamat_e_islami_books_store/components/AppBackButton.dart';
 import 'package:jamat_e_islami_books_store/components/BookTile.dart';
 import 'package:jamat_e_islami_books_store/components/PrimaryButton.dart';
+import 'package:jamat_e_islami_books_store/pages/AddNewBook/AddNewBook.dart';
 import 'package:jamat_e_islami_books_store/pages/BookDetails/BookDetails.dart';
 import 'package:jamat_e_islami_books_store/pages/HomePage/HomePage.dart';
 import 'package:jamat_e_islami_books_store/pages/HomePage/Widgets/AppBar.dart';
@@ -17,6 +18,7 @@ class ProfilPage extends StatelessWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>AddNewBook()));
         },
         child: Icon(Icons.add, color: Theme.of(context).colorScheme.background,),
       ),
