@@ -16,11 +16,11 @@ class WelcomePage extends StatelessWidget {
               height: 600,
               color: Theme.of(context).colorScheme.primary,
               child: Row(
-                mainAxisAlignment: .center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Flexible(
                     child: Column(
-                      mainAxisAlignment: .center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         // Text("Welcome to Homepage")
                         Image.asset(
@@ -32,12 +32,12 @@ class WelcomePage extends StatelessWidget {
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 30,
-                              fontWeight: .bold
+                              fontWeight: FontWeight.bold
                           ),
                         ),
                         Text("Here is the ultimate book store to read books without any problem ",
                             // "any hassle ",
-                            textAlign: .center,
+                            textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                               color: Theme.of(context).colorScheme.background
                             ),

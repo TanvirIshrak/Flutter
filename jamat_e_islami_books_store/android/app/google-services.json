@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "926856193056",
+    "project_id": "islami-ebook-store",
+    "storage_bucket": "islami-ebook-store.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:926856193056:android:7fabf60b4b75475a6d0845",
+        "android_client_info": {
+          "package_name": "com.example.jamat_e_islami_books_store"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPfiEsbRE6_2yOVdlVeeAoqdKCUx85vd8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

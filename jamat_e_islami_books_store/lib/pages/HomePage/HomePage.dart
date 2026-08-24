@@ -30,13 +30,12 @@ class _HomepageState extends State<Homepage> {
               padding: EdgeInsets.all(10),
               color: Theme.of(context).colorScheme.primary,
               height: 400,
-              child: Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        children: [
-                          SizedBox(height: 60),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        SizedBox(height: 60),
 
                           // Adding home app bar => pages/HomePage/Widgets/AppBar.dart
                           HomeAppbar(),
@@ -108,7 +107,6 @@ class _HomepageState extends State<Homepage> {
                     ),
                   ],
                 ),
-              ),
             ),
 
             SizedBox(height: 10),
