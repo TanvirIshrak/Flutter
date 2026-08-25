@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jamat_e_islami_books_store/components/AppBackButton.dart';
@@ -18,26 +20,25 @@ class AddNewBook extends StatelessWidget {
     final border = cs.primary.withOpacity(0.25);
 
     InputDecoration deco(String label, IconData icon) => InputDecoration(
-          isDense: true,
-          filled: true,
-          fillColor: fill,
-          labelText: label,
-          prefixIcon: Icon(icon, size: 20),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: border),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: border),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: cs.primary, width: 1.4),
-          ),
-        );
+      isDense: true,
+      filled: true,
+      fillColor: fill,
+      labelText: label,
+      prefixIcon: Icon(icon, size: 20),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(color: border),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(color: border),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(color: cs.primary, width: 1.4),
+      ),
+    );
 
     Widget field({
       required String label,
@@ -45,28 +46,27 @@ class AddNewBook extends StatelessWidget {
       required TextEditingController controller,
       TextInputType? type,
       int? maxLines,
-    }) =>
-        Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: TextFormField(
-            controller: controller,
-            keyboardType: type,
-            maxLines: maxLines ?? 1,
-            style: Theme.of(context).textTheme.bodySmall,
-            decoration: deco(label, icon),
-          ),
-        );
+    }) => Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: TextFormField(
+        controller: controller,
+        keyboardType: type,
+        maxLines: maxLines ?? 1,
+        style: Theme.of(context).textTheme.bodySmall,
+        decoration: deco(label, icon),
+      ),
+    );
 
     Widget section(BuildContext context, String title) => Padding(
-          padding: const EdgeInsets.only(bottom: 8, top: 2),
-          child: Text(
-            title.toUpperCase(),
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  letterSpacing: 1.2,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-          ),
-        );
+      padding: const EdgeInsets.only(bottom: 8, top: 2),
+      child: Text(
+        title.toUpperCase(),
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+          letterSpacing: 1.2,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+      ),
+    );
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -74,8 +74,7 @@ class AddNewBook extends StatelessWidget {
           children: [
             // header
             Container(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
               color: cs.primary,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -94,38 +93,111 @@ class AddNewBook extends StatelessWidget {
                             Text(
                               "Add New Book",
                               textAlign: TextAlign.center,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
+                              style: Theme.of(context).textTheme.bodyMedium
                                   ?.copyWith(color: cs.background),
                             ),
                           ],
                         ),
                         const SizedBox(height: 24),
-                        Container(
-                          height: 140,
-                          width: 110,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: cs.onPrimaryContainer.withOpacity(0.5),
-                          ),
-                          child:Icon(
-                              Icons.add_a_photo_outlined,
-                              color: cs.background,
+                        // upload image section
+                        InkWell(
+                          onTap: () {
+                            bookController.pickImage();
+                          },
+                          child: Container(
+                            height: 140,
+                            width: 110,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: cs.onPrimaryContainer.withOpacity(0.5),
                             ),
+                            child: Obx(() {
+                              final localPath =
+                                  bookController.imageFileName.value;
+                              if (localPath.isNotEmpty &&
+                                  File(localPath).existsSync()) {
+                                return ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.file(
+                                    File(localPath),
+                                    fit: BoxFit.cover,
+                                    width: 110,
+                                    height: 140,
+                                  ),
+                                );
+                              }
+                              return Icon(
+                                Icons.add_a_photo_outlined,
+                                color: cs.background,
+                              );
+                            }),
+                          ),
                         ),
+                        const SizedBox(height: 6),
+                        // Upload progress / status / download URL line
+                        Obx(() {
+                          if (bookController.isUploading.value) {
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 4),
+                              child: SizedBox(
+                                height: 18,
+                                width: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    cs.background,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                          if (bookController.uploadError.value.isNotEmpty) {
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                top: 4,
+                                left: 8,
+                                right: 8,
+                              ),
+                              child: Text(
+                                bookController.uploadError.value,
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(color: Colors.redAccent),
+                              ),
+                            );
+                          }
+                          final url = bookController.imageUrl.value;
+                          if (url != null) {
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                top: 4,
+                                left: 8,
+                                right: 8,
+                              ),
+                              child: Text(
+                                "Uploaded ✓\n$url",
+                                textAlign: TextAlign.center,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(color: cs.background),
+                              ),
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        }),
                         const SizedBox(height: 8),
                         Text(
                           "Tanvir Ishrak",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
+                          style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(color: cs.background),
                         ),
                         Text(
                           "tanvirishrak@gmail.com",
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: cs.onPrimaryContainer.withOpacity(0.6)),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: cs.onPrimaryContainer.withOpacity(0.6),
+                              ),
                         ),
                       ],
                     ),
@@ -209,81 +281,131 @@ class AddNewBook extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.picture_as_pdf_outlined,
-                                size: 20, color: cs.primary),
+                            Icon(
+                              Icons.picture_as_pdf_outlined,
+                              size: 20,
+                              color: cs.primary,
+                            ),
                             const SizedBox(width: 8),
                             Text(
                               "Book PDF",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
+                              style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(fontWeight: FontWeight.w600),
                             ),
                           ],
                         ),
                         const SizedBox(height: 6),
                         // Reactive text for the picked PDF file name.
-                        Obx(() => Text(
-                              bookController.pdfFile.value,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(color: cs.onPrimaryContainer),
-                            )),
+                        Obx(
+                          () => Text(
+                            bookController.pdfFile.value,
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: cs.onPrimaryContainer),
+                          ),
+                        ),
                         const SizedBox(height: 8),
                         Row(
                           children: [
                             Expanded(
-                              child: OutlinedButton.icon(
-                                onPressed: () async {
-                                  // Pick a PDF using file_picker / image_picker etc.
-                                  // Update the reactive name when chosen.
-                                  // book.pdfFile.value = pickedFileName;
-                                },
-                                icon: const Icon(Icons.upload_file, size: 18),
-                                label: Text(
-                                  "Choose PDF",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall,
-                                ),
-                                style: OutlinedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10),
-                                  side: BorderSide(color: cs.primary),
-                                  foregroundColor: cs.primary,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                              child: Obx(
+                                () => OutlinedButton.icon(
+                                  onPressed: bookController.isPdfUploading.value
+                                      ? null
+                                      : bookController.pickPdf,
+                                  icon: bookController.isPdfUploading.value
+                                      ? const SizedBox(
+                                          height: 14,
+                                          width: 14,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                          ),
+                                        )
+                                      : const Icon(Icons.upload_file, size: 18),
+                                  label: Text(
+                                    bookController.isPdfUploading.value
+                                        ? "Uploading..."
+                                        : "Choose PDF",
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodySmall,
+                                  ),
+                                  style: OutlinedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 10,
+                                    ),
+                                    side: BorderSide(color: cs.primary),
+                                    foregroundColor: cs.primary,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                             const SizedBox(width: 10),
                             Expanded(
-                              child: OutlinedButton.icon(
-                                onPressed: () async {
-                                  // Pick an audio file similarly.
-                                  // book.audioFile.value = pickedFileName;
-                                },
-                                icon: const Icon(Icons.audiotrack, size: 18),
-                                label: Text(
-                                  "Choose Audio",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall,
-                                ),
-                                style: OutlinedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10),
-                                  side: BorderSide(color: cs.primary),
-                                  foregroundColor: cs.primary,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                              child: Obx(
+                                () => OutlinedButton.icon(
+                                  onPressed:
+                                      bookController.isAudioUploading.value
+                                      ? null
+                                      : bookController.pickAudio,
+                                  icon: bookController.isAudioUploading.value
+                                      ? const SizedBox(
+                                          height: 14,
+                                          width: 14,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                          ),
+                                        )
+                                      : const Icon(Icons.audiotrack, size: 18),
+                                  label: Text(
+                                    bookController.isAudioUploading.value
+                                        ? "Uploading..."
+                                        : "Choose Audio",
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodySmall,
+                                  ),
+                                  style: OutlinedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 10,
+                                    ),
+                                    side: BorderSide(color: cs.primary),
+                                    foregroundColor: cs.primary,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                           ],
+                        ),
+                        // Error labels for PDF / Audio, reactively shown.
+                        Obx(
+                          () => bookController.pdfError.value.isNotEmpty
+                              ? Padding(
+                                  padding: const EdgeInsets.only(top: 6),
+                                  child: Text(
+                                    bookController.pdfError.value,
+                                    style: Theme.of(context).textTheme.bodySmall
+                                        ?.copyWith(color: Colors.redAccent),
+                                  ),
+                                )
+                              : const SizedBox.shrink(),
+                        ),
+                        Obx(
+                          () => bookController.audioError.value.isNotEmpty
+                              ? Padding(
+                                  padding: const EdgeInsets.only(top: 6),
+                                  child: Text(
+                                    bookController.audioError.value,
+                                    style: Theme.of(context).textTheme.bodySmall
+                                        ?.copyWith(color: Colors.redAccent),
+                                  ),
+                                )
+                              : const SizedBox.shrink(),
                         ),
                       ],
                     ),
@@ -293,7 +415,22 @@ class AddNewBook extends StatelessWidget {
                   PrimaryButton(
                     buttonName: "Publish Book",
                     onPressed: () {
-                      // TODO: publish using book.* field values.
+                      // TODO: publish the book using book.* field values.
+                      // Currently this only verifies that an image was
+                      // uploaded; wire it to Firestore when ready.
+                      if (bookController.imageUrl.value == null) {
+                        Get.snackbar(
+                          "Image required",
+                          "Please pick and upload a book cover image first.",
+                          snackPosition: SnackPosition.BOTTOM,
+                        );
+                        return;
+                      }
+                      Get.snackbar(
+                        "Not implemented",
+                        "Wiring to Firestore is pending.",
+                        snackPosition: SnackPosition.BOTTOM,
+                      );
                     },
                   ),
                   const SizedBox(height: 10),
@@ -311,13 +448,10 @@ class AddNewBook extends StatelessWidget {
                       ),
                       child: Text(
                         "Cancel",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(
-                              color: Colors.red,
-                              fontWeight: FontWeight.w600,
-                            ),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.red,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),

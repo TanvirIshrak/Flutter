@@ -1,1 +1,28 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"islami-ebook-store","appId":"1:926856193056:android:7fabf60b4b75475a6d0845","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"islami-ebook-store","configurations":{"android":"1:926856193056:android:7fabf60b4b75475a6d0845","ios":"1:926856193056:ios:002d3ec687e906ee6d0845","macos":"1:926856193056:ios:002d3ec687e906ee6d0845","web":"1:926856193056:web:1f097429d4aaf28a6d0845","windows":"1:926856193056:web:debbb608506880f36d0845"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "islami-ebook-store",
+          "appId": "1:926856193056:android:7fabf60b4b75475a6d0845",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "islami-ebook-store",
+          "configurations": {
+            "android": "1:926856193056:android:7fabf60b4b75475a6d0845",
+            "ios": "1:926856193056:ios:002d3ec687e906ee6d0845",
+            "macos": "1:926856193056:ios:002d3ec687e906ee6d0845",
+            "web": "1:926856193056:web:1f097429d4aaf28a6d0845",
+            "windows": "1:926856193056:web:debbb608506880f36d0845"
+          }
+        }
+      }
+    }
+  },
+  "storage": {
+    "rules": "storage.rules"
+  }
+}

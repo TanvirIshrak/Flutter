@@ -1,0 +1,11 @@
+rules_version = '2';
+
+// A permissive ruleset for development.
+// TODO: tighten before production — restrict by auth.uid / file size / mime type.
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if true;
+    }
+  }
+}
