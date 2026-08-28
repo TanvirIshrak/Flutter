@@ -16,6 +16,32 @@ class HeaderDetails extends StatelessWidget {
   final String description;
   const HeaderDetails({super.key, required this.title, required this.author, required this.coverURL, required this.rating, required this.pages, required this.language, required this.audio, required this.description});
 
+  /// Picks Image.asset (local path) or Image.network (Cloudinary URL)
+  /// based on whether `coverURL` is a local asset or a remote URL.
+  Widget _coverImage(String coverURL) {
+    final isRemote =
+        coverURL.startsWith('http://') || coverURL.startsWith('https://');
+    return isRemote
+        ? Image.network(
+            coverURL,
+            width: 200,
+            height: 200,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => Container(
+              width: 200,
+              height: 200,
+              color: Colors.grey.shade300,
+              child: const Icon(Icons.broken_image, color: Colors.grey),
+            ),
+          )
+        : Image.asset(
+            coverURL,
+            width: 200,
+            height: 200,
+            fit: BoxFit.cover,
+          );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -57,12 +83,7 @@ class HeaderDetails extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Image.asset(
-                  coverURL,
-                  width: 200,
-                  height: 200,
-                  // fit: BoxFit.cover,
-                ),
+                child: _coverImage(coverURL),
               ),
             ),
           ],

@@ -1,16 +1,22 @@
+import 'dart:convert';
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart' as file_picker;
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:jamat_e_islami_books_store/config/cloudinary.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:uuid/uuid.dart';
 
+/// Manages the "Add New Book" form state and uploads every picked asset
+/// (cover image, PDF, optional audio) directly to **Cloudinary**.
+///
+/// The upload uses Cloudinary's **unsigned upload preset** so no API
+/// secret is shipped with the app. See `lib/config/cloudinary.dart`.
 class BookController extends GetxController {
-  // TextEditingControllers for each form field.
+  // Form fields
   final title = TextEditingController();
   final description = TextEditingController();
   final author = TextEditingController();
@@ -21,20 +27,30 @@ class BookController extends GetxController {
   final price = TextEditingController();
   final audioLength = TextEditingController();
 
-  final imagePicker = ImagePicker(); // for uploading book image
+  final imagePicker = ImagePicker();
+  final Uuid _uuid = const Uuid();
+  final formKey = GlobalKey<FormState>();
 
-  final stroage = FirebaseStorage.instance;
-  final db = FirebaseFirestore.instance;
-
-  final RxnString imageUrl = RxnString(); // download URL after upload
-  final RxString imageFileName = "".obs; // local path of picked image
+  // Reactive UI state
+  final RxnString imageUrl = RxnString();
+  final RxString imageFileName = "".obs;
   final RxBool isUploading = false.obs;
   final RxString uploadError = "".obs;
-  // Reactive state for picked files / UI text.
+
   final RxString pdfFile = "No file chosen".obs;
   final RxString audioFile = "No file chosen".obs;
 
-  final formKey = GlobalKey<FormState>();
+  final RxnString pdfUrl = RxnString();
+  final RxnString audioUrl = RxnString();
+  final RxBool isPdfUploading = false.obs;
+  final RxBool isAudioUploading = false.obs;
+  final RxString pdfError = "".obs;
+  final RxString audioError = "".obs;
+
+  final RxBool isPublishing = false.obs;
+  final RxString publishError = "".obs;
+
+  final GlobalKey<SfPdfViewerState> pdfViewerKey = GlobalKey();
 
   @override
   void onClose() {
@@ -50,7 +66,7 @@ class BookController extends GetxController {
     super.onClose();
   }
 
-  /// Reset all fields and selected files back to defaults.
+  /// Reset every field back to its initial state.
   void resetAll() {
     title.clear();
     description.clear();
@@ -63,126 +79,87 @@ class BookController extends GetxController {
     audioLength.clear();
     pdfFile.value = "No file chosen";
     audioFile.value = "No file chosen";
+    imageFileName.value = "";
+    imageUrl.value = null;
+    pdfUrl.value = null;
+    audioUrl.value = null;
+    uploadError.value = "";
+    pdfError.value = "";
+    audioError.value = "";
+    publishError.value = "";
   }
 
+  // Image upload
   void pickImage() async {
     uploadError.value = "";
     final XFile? image = await imagePicker.pickImage(
       source: ImageSource.gallery,
     );
-    if (image != null) {
-      print("Picked image path: ${image.path}");
-      imageFileName.value = image.path;
-      await uploadImageToFirebase(File(image.path));
-    }
+    if (image == null) return;
+    imageFileName.value = image.path;
+    await uploadImageToCloudinary(File(image.path));
   }
 
-  Future<void> uploadImageToFirebase(File image) async {
+  Future<void> uploadImageToCloudinary(File image) async {
     try {
       isUploading.value = true;
-      // Validate the local file actually exists on disk before attempting
-      // to upload. On some Android emulators image_picker returns a temp path
-      // that has already been cleaned up.
       if (!await image.exists()) {
         throw Exception(
-          "Local image file no longer exists at ${image.path}. "
-          "Try picking the image again.",
+          "Local image file no longer exists at ${image.path}.",
         );
       }
-
-      var uuid = Uuid();
-      var filename = "${uuid.v1()}.jpg";
-      var storageRef = stroage.ref().child("pdfImages/$filename");
-
-      // Upload with explicit content-type so the file is served back correctly.
-      final metadata = SettableMetadata(contentType: "image/jpeg");
-      var response = await storageRef.putFile(image, metadata);
-
-      // Guard: if the upload task itself failed (e.g. storage rules denied
-      // the write), putFile still returns a snapshot but `response.totalBytes
-      // == 0` and the resulting `getDownloadURL()` call throws the cryptic
-      // "object-not-found". Detect that here and throw a clearer error.
-      if (response.totalBytes <= 0) {
-        throw Exception(
-          "Upload returned 0 bytes. This usually means Firebase Storage "
-          "rules blocked the write. Check the 'storage.rules' file and "
-          "publish it from the Firebase console.",
-        );
-      }
-
-      String downloadUrl = await response.ref.getDownloadURL();
-      imageUrl.value = downloadUrl;
-      print("Image uploaded successfully. Download URL: $downloadUrl");
-    } catch (e, st) {
-      uploadError.value = "Upload failed: $e";
-      print("Upload error: $e\n$st");
+      final filename = "${_uuid.v1()}.jpg";
+      final url = await uploadAsset(
+        file: image,
+        resourceType: 'image',
+        folder: CloudinaryConfig.coversFolder,
+        publicId: filename,
+      );
+      imageUrl.value = url;
+    } catch (e) {
+      uploadError.value = "Image upload failed: $e";
     } finally {
       isUploading.value = false;
     }
   }
 
-  final GlobalKey<SfPdfViewerState> pdfViewerKey = GlobalKey();
-
-  /// Reactive state for uploaded media URLs.
-  final RxnString pdfUrl = RxnString();
-  final RxnString audioUrl = RxnString();
-  final RxBool isPdfUploading = false.obs;
-  final RxBool isAudioUploading = false.obs;
-  final RxString pdfError = "".obs;
-  final RxString audioError = "".obs;
-
-  /// Pick a PDF from device storage and upload it to Firebase Storage under
-  /// `pdfFiles/<uuid>.pdf`. On success, updates [pdfFile] (display name) and
-  /// [pdfUrl] (download URL).
+  // PDF upload
   void pickPdf() async {
     pdfError.value = "";
     try {
-      // Newer versions of file_picker (>=8.x) return a `List<PlatformFile>`
-      // directly instead of a `FilePickerResult` wrapper.
       final picked = await file_picker.FilePicker.pickFiles(
         type: file_picker.FileType.custom,
         allowedExtensions: ['pdf'],
       );
       if (picked.isEmpty) return;
       final file = picked.first;
-
-      // file_picker may return an empty path on some platforms (e.g. when
-      // bytes are loaded but the file isn't on disk).
       if (file.path == null) {
         throw Exception("Could not access the picked PDF file path.");
       }
-
       final localFile = File(file.path!);
-      pdfFile.value = file.name; // show the user-selected name in UI
+      pdfFile.value = file.name;
 
       isPdfUploading.value = true;
-      final bytes = await localFile.readAsBytes();
-      final filename = "${const Uuid().v1()}.pdf";
-      final ref = stroage.ref().child("pdfFiles/$filename");
-      final response = await ref.putData(
-        bytes,
-        SettableMetadata(contentType: "application/pdf"),
+      final filename = "${_uuid.v1()}.pdf";
+      final url = await uploadAsset(
+        file: localFile,
+        // Use `image` so Cloudinary serves the PDF inline (no
+        // `Content-Disposition: attachment` header). The PDF still
+        // opens correctly in `SfPdfViewer.network` because Cloudinary
+        // auto-detects the format and sets `Content-Type: application/pdf`.
+        resourceType: 'image',
+        folder: CloudinaryConfig.pdfsFolder,
+        publicId: filename,
       );
-      if (response.totalBytes <= 0) {
-        throw Exception(
-          "PDF upload returned 0 bytes. Firebase Storage rules may be "
-          "blocking the write. Publish storage.rules and try again.",
-        );
-      }
-      final downloadUrl = await response.ref.getDownloadURL();
-      pdfUrl.value = downloadUrl;
-      print("PDF uploaded successfully. Download URL: $downloadUrl");
-    } catch (e, st) {
+      pdfUrl.value = url;
+    } catch (e) {
       pdfError.value = "PDF upload failed: $e";
-      print("PDF upload error: $e\n$st");
     } finally {
       isPdfUploading.value = false;
     }
   }
 
-  /// Pick an audio file from device storage and upload it to Firebase Storage
-  /// under `audioFiles/<uuid>.<ext>`. On success, updates [audioFile] and
-  /// [audioUrl].
+  // Audio upload
   void pickAudio() async {
     audioError.value = "";
     try {
@@ -194,31 +171,98 @@ class BookController extends GetxController {
       if (file.path == null) {
         throw Exception("Could not access the picked audio file path.");
       }
-
       final localFile = File(file.path!);
       audioFile.value = file.name;
 
       isAudioUploading.value = true;
-      final bytes = await localFile.readAsBytes();
-      // Preserve the original extension if we have it; default to mp3.
       final ext = (file.extension ?? "mp3").toLowerCase();
-      final filename = "${const Uuid().v1()}.$ext";
-      final ref = stroage.ref().child("audioFiles/$filename");
-      final response = await ref.putData(bytes);
-      if (response.totalBytes <= 0) {
-        throw Exception(
-          "Audio upload returned 0 bytes. Firebase Storage rules may be "
-          "blocking the write. Publish storage.rules and try again.",
-        );
-      }
-      final downloadUrl = await response.ref.getDownloadURL();
-      audioUrl.value = downloadUrl;
-      print("Audio uploaded successfully. Download URL: $downloadUrl");
-    } catch (e, st) {
+      final filename = "${_uuid.v1()}.$ext";
+      final url = await uploadAsset(
+        file: localFile,
+        resourceType: 'raw',
+        folder: CloudinaryConfig.audioFolder,
+        publicId: filename,
+      );
+      audioUrl.value = url;
+    } catch (e) {
       audioError.value = "Audio upload failed: $e";
-      print("Audio upload error: $e\n$st");
     } finally {
       isAudioUploading.value = false;
     }
+  }
+
+  /// Returns a JSON map containing every uploaded URL + form value. When
+  /// you add a real database just POST this map to it.
+  Map<String, dynamic>? publishBook() {
+    publishError.value = "";
+
+    // Light sanity checks — only block on missing uploads, not on
+    // empty text fields, since the form isn't wrapped in a Form widget
+    // (we use plain TextFormFields with no validators).
+    if (imageUrl.value == null) {
+      publishError.value = "Please upload a cover image first.";
+      return null;
+    }
+    if (pdfUrl.value == null) {
+      publishError.value = "Please upload a PDF first.";
+      return null;
+    }
+    if (title.text.trim().isEmpty) {
+      publishError.value = "Please enter a book title.";
+      return null;
+    }
+
+    isPublishing.value = true;
+    final book = <String, dynamic>{
+      "id": _uuid.v4(),
+      "title": title.text.trim(),
+      "description": description.text.trim(),
+      "author": author.text.trim(),
+      "aboutauthor": aboutAuthor.text.trim(),
+      "category": category.text.trim(),
+      "language": language.text.trim(),
+      "pages": int.tryParse(pages.text.trim()) ?? 0,
+      "price": price.text.trim(),
+      "audiolen": audioLength.text.trim(),
+      "coverImagePath": imageUrl.value,
+      "coverURL": imageUrl.value,
+      "bookurl": pdfUrl.value,
+      "audiourl": audioUrl.value,
+      "rating": 0.0,
+      "numberOfRatings": 0,
+      "createdAt": DateTime.now().toIso8601String(),
+    };
+    isPublishing.value = false;
+    return book;
+  }
+
+  // Core Cloudinary upload. Returns secure_url on success.
+  Future<String> uploadAsset({
+    required File file,
+    required String resourceType,
+    required String folder,
+    required String publicId,
+  }) async {
+    final endpoint = CloudinaryConfig.uploadEndpoint(resourceType);
+    final uri = Uri.parse(endpoint);
+    final request = http.MultipartRequest('POST', uri)
+      ..fields['upload_preset'] = CloudinaryConfig.uploadPreset
+      ..fields['folder'] = folder
+      ..fields['public_id'] = publicId
+      ..files.add(await http.MultipartFile.fromPath('file', file.path));
+
+    final streamed = await request.send();
+    final response = await http.Response.fromStream(streamed);
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw Exception(
+        "Cloudinary responded ${response.statusCode}: ${response.body}",
+      );
+    }
+    final body = jsonDecode(response.body) as Map<String, dynamic>;
+    final url = body['secure_url'] as String?;
+    if (url == null || url.isEmpty) {
+      throw Exception("Cloudinary response missing secure_url: ${response.body}");
+    }
+    return url;
   }
 }

@@ -15,20 +15,21 @@
 
 class BookModel {
   BookModel({
-      String? id, 
-      String? title, 
-      String? description, 
+      String? id,
+      String? title,
+      String? description,
       double? rating,
-      num? pages, 
-      String? language, 
-      String? audiolen, 
-      String? author, 
-      String? aboutauthor, 
-      String? bookurl, 
-      String? audiourl, 
-      String? category, 
+      num? pages,
+      String? language,
+      String? audiolen,
+      String? author,
+      String? aboutauthor,
+      String? bookurl,
+      String? audiourl,
+      String? category,
       String? price,
-      num? numberOfRatings,}){
+      num? numberOfRatings,
+      String? coverImagePath,}){
     _id = id;
     _title = title;
     _description = description;
@@ -43,6 +44,7 @@ class BookModel {
     _category = category;
     _price = price ;
     _numberOfRatings = numberOfRatings;
+    _coverImagePath = coverImagePath;
 }
 
   BookModel.fromJson(dynamic json) {
@@ -60,6 +62,7 @@ class BookModel {
     _category = json['category'];
     _price = json['price'];
     _numberOfRatings = json['numberOfRatings'];
+    _coverImagePath = json['coverImagePath'] ?? json['coverURL'];
   }
   String? _id;
   String? _title;
@@ -75,6 +78,10 @@ class BookModel {
   String? _category;
   String? _price;
   num? _numberOfRatings;
+  /// Local asset path OR remote URL for the book's cover image.
+  /// Falls back to `bookurl` (which historically held the cover path)
+  /// so older JSON payloads keep working.
+  String? _coverImagePath;
 BookModel copyWith({  String? id,
   String? title,
   String? description,
@@ -89,6 +96,7 @@ BookModel copyWith({  String? id,
   String? category,
   String? price,
   num? numberOfRatings,
+  String? coverImagePath,
 }) => BookModel(  id: id ?? _id,
   title: title ?? _title,
   description: description ?? _description,
@@ -103,6 +111,7 @@ BookModel copyWith({  String? id,
   category: category ?? _category,
   price: price ?? _price,
   numberOfRatings: numberOfRatings ?? _numberOfRatings,
+  coverImagePath: coverImagePath ?? _coverImagePath,
 );
   String? get id => _id;
   String? get title => _title;
@@ -119,7 +128,11 @@ BookModel copyWith({  String? id,
   String? get price => _price;
   num? get numberOfRatings => _numberOfRatings;
 
-  String? get coverURL => _bookurl;
+  /// Cover image — local asset path OR remote URL.
+  /// Backward-compat: if no separate cover image was provided, fall back
+  /// to whatever was stored in `bookurl` (older entries used it for the
+  /// cover).
+  String? get coverURL => _coverImagePath ?? _bookurl;
 
   String? get audio => _audiolen;
 
@@ -139,7 +152,7 @@ BookModel copyWith({  String? id,
     map['category'] = _category;
     map['price'] = _price;
     map['numberOfRatings'] = _numberOfRatings;
+    map['coverImagePath'] = _coverImagePath;
     return map;
   }
-
 }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:jamat_e_islami_books_store/Models/BookModel.dart';
 import 'package:jamat_e_islami_books_store/Models/Data.dart';
 import 'package:jamat_e_islami_books_store/components/BookCard.dart';
 import 'package:jamat_e_islami_books_store/components/BookTile.dart';
+import 'package:jamat_e_islami_books_store/controller/BookRepository.dart';
 import 'package:jamat_e_islami_books_store/pages/BookDetails/BookDetails.dart';
 import 'package:jamat_e_islami_books_store/pages/HomePage/Widgets/AppBar.dart';
 import 'package:jamat_e_islami_books_store/pages/HomePage/Widgets/CategoryWidget.dart';
@@ -112,52 +115,66 @@ class _HomepageState extends State<Homepage> {
             SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        "Trending",
-                        style: Theme.of(context).textTheme.labelMedium,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children:
-                      // eitar somoi children er [] dewa jabena
-                      bookData.map((e) => BookCard(
-                          title: e.title!,
-                          coverURL: e.bookurl!,
-                          onPressed: () {
-                            // Get.to(BookDetails());
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>BookDetails(book: e,)));
-                          },
-                        ),
-                      ).toList(),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Row(
+              // Obx re-renders the section whenever a new book is added to
+              // BookRepository — i.e. published via AddNewBook.
+              child: Obx(() {
+                // 16 hardcoded books (PDFs already on Cloudinary) + any
+                // freshly-published books live on top.
+                final List<BookModel> allBooks = [
+                  ...bookData,
+                  ...BookRepository.instance.books,
+                ];
+                return Column(
+                  children: [
+                    Row(
                       children: [
-                        Text("Your Interest"),
-                      ]
-                  ),
-                  SizedBox(height: 10),
-                  Column(
-                    children: bookData.map((e)=> BookTile(
-                        title: e.title!,
-                        coverURL: e.bookurl!,
-                        author: e.author!,
-                        price: e.price!,
-                        rating: e.rating!,
-                        totalRating: e.numberOfRatings!)
-                        ).toList()
-                    )
-                ],
-              ),
+                        Text(
+                          "Trending",
+                          style: Theme.of(context).textTheme.labelMedium,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children:
+                        // eitar somoi children er [] dewa jabena
+                        allBooks.map((e) => BookCard(
+                            title: e.title!,
+                            coverURL: e.coverURL ?? e.bookurl ?? "",
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BookDetails(book: e),
+                                ),
+                              );
+                            },
+                          ),
+                        ).toList(),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Row(children: [Text("Your Interest")]),
+                    SizedBox(height: 10),
+                    Column(
+                      children: allBooks
+                          .map(
+                            (e) => BookTile(
+                              title: e.title!,
+                              coverURL: e.coverURL ?? e.bookurl ?? "",
+                              author: e.author!,
+                              price: e.price!,
+                              rating: e.rating!,
+                              totalRating: e.numberOfRatings!,
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ],
+                );
+              }),
             ),
           ],
         ),

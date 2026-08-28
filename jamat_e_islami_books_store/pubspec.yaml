@@ -38,12 +38,13 @@ dependencies:
   get: ^4.7.2
   syncfusion_flutter_pdfviewer: ^34.2.3
   lottie: ^3.5.1
-  firebase_core: ^4.13.0
   file_picker: ^12.1.0
-  cloud_firestore: ^6.8.0
-  firebase_storage: ^13.4.6
   image_picker: ^1.2.3
   uuid: ^4.6.0
+  http: ^1.2.2
+  # Cloudinary — image / pdf / audio uploads go directly from the device to
+  # your Cloudinary cloud. You only need to fill in lib/config/cloudinary.dart.
+  cloudinary_public: ^0.23.1
 
 dev_dependencies:
   flutter_test:

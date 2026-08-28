@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart' as firebase_core;
+import 'package:jamat_e_islami_books_store/Models/Data.dart';
 import 'package:jamat_e_islami_books_store/config/Theme.dart';
-import 'package:jamat_e_islami_books_store/firebase_options.dart';
+import 'package:jamat_e_islami_books_store/controller/BookRepository.dart';
 import 'package:jamat_e_islami_books_store/pages/SplashScreenPage/SplashScreen.dart';
-import 'package:jamat_e_islami_books_store/pages/WelcomePage/WelcomePage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await firebase_core.Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-);
+  // Seed the in-memory book repository with the 16 hardcoded books
+  // (their PDFs live on Cloudinary under islami_books/pdfs/...). New
+  // books published via AddNewBook are appended on top.
+  BookRepository.instance.books.addAll(bookData);
+  // Cloudinary uploads use direct HTTPS, no async SDK init needed here.
   runApp(const MyApp());
 }
 

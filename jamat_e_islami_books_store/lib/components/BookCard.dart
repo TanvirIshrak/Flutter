@@ -7,6 +7,32 @@ class BookCard extends StatelessWidget {
 
   const BookCard({super.key, required this.coverURL, required this.title, required this.onPressed});
 
+  /// Picks the right Image widget based on whether `coverURL` is a local
+  /// asset path (no scheme) or a remote URL (http/https).
+  Widget _coverImage() {
+    final isRemote =
+        coverURL.startsWith('http://') || coverURL.startsWith('https://');
+    return isRemote
+        ? Image.network(
+            coverURL,
+            height: 100,
+            width: 200,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => Container(
+              height: 100,
+              width: 200,
+              color: Colors.grey.shade300,
+              child: const Icon(Icons.broken_image, color: Colors.grey),
+            ),
+          )
+        : Image.asset(
+            coverURL,
+            height: 100,
+            width: 200,
+            fit: BoxFit.cover,
+          );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -31,18 +57,14 @@ class BookCard extends StatelessWidget {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadiusGeometry.circular(30),
-                  child: Image.asset(
-                    coverURL,
-                    height: 100,
-                    width: 200,
-                  ),
+                  child: _coverImage(),
                 ),
               ),
               SizedBox(height: 10,),
               Text(
                 title,
                 maxLines: 1,  // to solve line overflow issue
-                textAlign: .center,
+                textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodySmall,
               )
             ],

@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:jamat_e_islami_books_store/components/AppBackButton.dart';
 import 'package:jamat_e_islami_books_store/components/PrimaryButton.dart';
 import 'package:jamat_e_islami_books_store/controller/BookController.dart';
+import 'package:jamat_e_islami_books_store/controller/BookRepository.dart';
+import 'package:jamat_e_islami_books_store/Models/BookModel.dart';
 
 class AddNewBook extends StatelessWidget {
   const AddNewBook({super.key});
@@ -413,24 +415,43 @@ class AddNewBook extends StatelessWidget {
 
                   const SizedBox(height: 4),
                   PrimaryButton(
-                    buttonName: "Publish Book",
+                    buttonName: bookController.isPublishing.value
+                        ? "Publishing..."
+                        : "Publish Book",
                     onPressed: () {
-                      // TODO: publish the book using book.* field values.
-                      // Currently this only verifies that an image was
-                      // uploaded; wire it to Firestore when ready.
-                      if (bookController.imageUrl.value == null) {
+                      final book = bookController.publishBook();
+                      if (book == null) {
                         Get.snackbar(
-                          "Image required",
-                          "Please pick and upload a book cover image first.",
+                          "Cannot publish",
+                          bookController.publishError.value.isEmpty
+                              ? "Please review the form."
+                              : bookController.publishError.value,
                           snackPosition: SnackPosition.BOTTOM,
                         );
                         return;
                       }
-                      Get.snackbar(
-                        "Not implemented",
-                        "Wiring to Firestore is pending.",
-                        snackPosition: SnackPosition.BOTTOM,
+                      // `book` is a Map<String, dynamic> with every Cloudinary
+                      // secure_url + form value. Save it into the in-memory
+                      // repository so HomePage shows the new book right away.
+                      // Swap this single line with a Firestore / Supabase
+                      // insert when you add a real backend.
+                      BookRepository.instance.addBook(
+                        BookModel.fromJson(book),
                       );
+                      Get.snackbar(
+                        "Published",
+                        "Book uploaded to Cloudinary. "
+                            "Cover + PDF + audio ready.",
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.green,
+                        colorText: Colors.white,
+                        icon: const Icon(Icons.check_circle, color: Colors.white),
+                        margin: const EdgeInsets.all(12),
+                        borderRadius: 10,
+                        duration: const Duration(seconds: 3),
+                      );
+                      bookController.resetAll();
+                      Get.back();
                     },
                   ),
                   const SizedBox(height: 10),

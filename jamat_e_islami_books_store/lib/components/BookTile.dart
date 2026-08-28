@@ -10,6 +10,32 @@ class BookTile  extends StatelessWidget {
   final VoidCallback? onPressed;
   const BookTile ({super.key, required this.title, required this.coverURL, required this.author, required this.price, required this.rating, required this.totalRating, this.onPressed});
 
+  /// Picks the right Image widget based on whether `coverURL` is a local
+  /// asset path or a remote URL (e.g. Cloudinary-hosted cover image).
+  Widget _coverImage() {
+    final isRemote =
+        coverURL.startsWith('http://') || coverURL.startsWith('https://');
+    return isRemote
+        ? Image.network(
+            coverURL,
+            height: 80,
+            width: 100,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => Container(
+              height: 80,
+              width: 100,
+              color: Colors.grey.shade300,
+              child: const Icon(Icons.broken_image, color: Colors.grey),
+            ),
+          )
+        : Image.asset(
+            coverURL,
+            height: 80,
+            width: 100,
+            fit: BoxFit.cover,
+          );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -39,11 +65,7 @@ class BookTile  extends StatelessWidget {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadiusGeometry.circular(30),
-                  child: Image.asset(
-                    coverURL,
-                    height: 80,
-                    width: 100,
-                  ),
+                  child: _coverImage(),
                 ),
               ),
               Expanded(
