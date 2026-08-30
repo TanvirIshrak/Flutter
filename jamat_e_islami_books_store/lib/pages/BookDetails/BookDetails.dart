@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jamat_e_islami_books_store/Models/BookModel.dart';
 import 'package:jamat_e_islami_books_store/components/AppBackButton.dart';
-import 'package:jamat_e_islami_books_store/config/colors.dart';
 import 'package:jamat_e_islami_books_store/pages/BookDetails/BookActionButton.dart';
 import 'package:jamat_e_islami_books_store/pages/BookDetails/Header.dart';
 class BookDetails extends StatelessWidget {

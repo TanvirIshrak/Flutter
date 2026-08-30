@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jamat_e_islami_books_store/components/PrimaryButton.dart';
 import 'package:jamat_e_islami_books_store/config/colors.dart';
 import 'package:jamat_e_islami_books_store/pages/HomePage/HomePage.dart';
+import 'package:jamat_e_islami_books_store/pages/Login%20Page/LoginPage.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -56,7 +57,7 @@ class WelcomePage extends StatelessWidget {
               child: PrimaryButton(
                   buttonName: "Enter into the library",
                   onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => Homepage()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
                   }
               )
             )

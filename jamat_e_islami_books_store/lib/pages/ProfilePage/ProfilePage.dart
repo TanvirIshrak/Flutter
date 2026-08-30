@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jamat_e_islami_books_store/Models/Data.dart';
@@ -8,13 +9,49 @@ import 'package:jamat_e_islami_books_store/pages/AddNewBook/AddNewBook.dart';
 import 'package:jamat_e_islami_books_store/pages/BookDetails/BookDetails.dart';
 import 'package:jamat_e_islami_books_store/pages/HomePage/HomePage.dart';
 import 'package:jamat_e_islami_books_store/pages/HomePage/Widgets/AppBar.dart';
+import 'package:jamat_e_islami_books_store/pages/Login%20Page/LoginPage.dart';
 
 class ProfilPage extends StatelessWidget {
   const ProfilPage
 ({super.key});
 
+  Future<void> _signOut(BuildContext context) async {
+    try {
+      // Firebase থেকে sign out — এটা হলে authStateChanges() stream
+      // ব্যবহার করে _AuthGate নিজে নিজে LoginScreen দেখাবে।
+      await FirebaseAuth.instance.signOut();
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Sign out failed: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      return; // sign out fail হলে redirect করব না
+    }
+
+    // sign out সফল হলে পুরো stack (Profile, Home, Splash) মুছে দিয়ে
+    // root এ LoginScreen বসিয়ে দিই। এতে back button আর কোনো
+    // logged-in screen এ ফিরতে পারবে না এবং redirect instant হবে।
+    Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Pull the live user from Firebase so the name/email always matches
+    // whoever is currently signed in.
+    final user = FirebaseAuth.instance.currentUser;
+    final displayName =
+        (user?.displayName != null && user!.displayName!.isNotEmpty)
+            ? user.displayName!
+            : 'Guest reader';
+    final email = user?.email ?? 'Not signed in';
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: (){
@@ -80,13 +117,29 @@ class ProfilPage extends StatelessWidget {
                           ),
         
                           SizedBox(height: 10,),
-                          Text("Tanvir Ishrak", style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          Text(displayName, style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Theme.of(context).colorScheme.background),
                           ),
-                          Text("tanvirishrak@gmail.com", style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          Text(email, style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.5)),
                           ),
                           SizedBox(height: 20,),
+                          // Sign-out button — calls FirebaseAuth.signOut()
+                          // and the auth gate in main.dart routes us back
+                          // to the login screen automatically.
+                          OutlinedButton.icon(
+                            onPressed: () => _signOut(context),
+                            icon: const Icon(Icons.logout, color: Colors.white),
+                            label: const Text(
+                              'Sign out',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(color: Colors.white70),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 24, vertical: 12),
+                            ),
+                          ),
                         ],
                       ),
                     )

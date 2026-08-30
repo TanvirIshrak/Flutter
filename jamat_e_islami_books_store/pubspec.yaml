@@ -45,6 +45,8 @@ dependencies:
   # Cloudinary — image / pdf / audio uploads go directly from the device to
   # your Cloudinary cloud. You only need to fill in lib/config/cloudinary.dart.
   cloudinary_public: ^0.23.1
+  firebase_core: ^4.14.0
+  firebase_auth: ^6.6.1
 
 dev_dependencies:
   flutter_test:
