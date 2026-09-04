@@ -41,12 +41,13 @@ dependencies:
   file_picker: ^12.1.0
   image_picker: ^1.2.3
   uuid: ^4.6.0
-  http: ^1.2.2
+  http: ^1.6.0
   # Cloudinary — image / pdf / audio uploads go directly from the device to
   # your Cloudinary cloud. You only need to fill in lib/config/cloudinary.dart.
   cloudinary_public: ^0.23.1
   firebase_core: ^4.14.0
   firebase_auth: ^6.6.1
+  shared_preferences: ^2.5.5
 
 dev_dependencies:
   flutter_test:

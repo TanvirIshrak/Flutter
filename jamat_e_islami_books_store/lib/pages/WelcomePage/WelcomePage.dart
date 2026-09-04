@@ -57,7 +57,7 @@ class WelcomePage extends StatelessWidget {
               child: PrimaryButton(
                   buttonName: "Enter into the library",
                   onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
                   }
               )
             )

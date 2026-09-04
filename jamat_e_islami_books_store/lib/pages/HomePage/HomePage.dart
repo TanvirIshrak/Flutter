@@ -1,15 +1,20 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:jamat_e_islami_books_store/Models/BookModel.dart';
 import 'package:jamat_e_islami_books_store/Models/Data.dart';
 import 'package:jamat_e_islami_books_store/components/BookCard.dart';
 import 'package:jamat_e_islami_books_store/components/BookTile.dart';
+import 'package:jamat_e_islami_books_store/config/bdapps.dart';
 import 'package:jamat_e_islami_books_store/controller/BookRepository.dart';
 import 'package:jamat_e_islami_books_store/pages/BookDetails/BookDetails.dart';
 import 'package:jamat_e_islami_books_store/pages/HomePage/Widgets/AppBar.dart';
 import 'package:jamat_e_islami_books_store/pages/HomePage/Widgets/CategoryWidget.dart';
 import 'package:jamat_e_islami_books_store/pages/HomePage/Widgets/InputTextField.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -21,9 +26,130 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   get Get => null;
 
+  bool _isUnsubscribing = false;
+
+  // Posts the user's phone to the BDApps unsubscribe endpoint, then wipes
+  // the local session (isLoggedIn + userPhone) and bounces them back to the
+  // login screen so the next cold start also lands on /login.
+  Future<void> _unsubscribe() async {
+    if (_isUnsubscribing) return;
+
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (dialogCtx) => AlertDialog(
+        title: const Text('Unsubscribe?'),
+        content: const Text(
+          'You will lose access to the e-book catalogue. You can resubscribe anytime by logging in again.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogCtx, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogCtx, true),
+            child: const Text(
+              'Unsubscribe',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (confirm != true) return;
+
+    final prefs = await SharedPreferences.getInstance();
+    final phone = prefs.getString('userPhone') ?? '';
+
+    setState(() => _isUnsubscribing = true);
+
+    try {
+      if (phone.isNotEmpty) {
+        await http
+            .post(
+              Uri.parse('${bdappsBaseUrl}unsubscribe.php'),
+              headers: {'Content-Type': 'application/json'},
+              body: jsonEncode({'phone': phone}),
+            )
+            .timeout(const Duration(seconds: 15));
+      }
+      // Whether or not the backend ack arrives, drop the local session
+      // so the user can no longer browse without re-subscribing.
+      await prefs.setBool('isLoggedIn', false);
+      await prefs.remove('userPhone');
+
+      if (!mounted) return;
+      Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
+        '/login',
+        (route) => false,
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Unsubscribe failed: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _isUnsubscribing = false);
+    }
+  }
+
+  Widget _buildDrawer() {
+    return Drawer(
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                children: [
+                  Image.asset(
+                    'Assets/Images/book.png',
+                    height: 48,
+                    width: 48,
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'E-Book',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ],
+              ),
+            ),
+            const Divider(height: 1),
+            ListTile(
+              leading: const Icon(Icons.info_outline, color: Colors.red),
+              title: const Text(
+                'Unsubscribe',
+                style: TextStyle(color: Colors.red),
+              ),
+              onTap: _isUnsubscribing
+                  ? null
+                  : () {
+                      Navigator.pop(context); // close drawer
+                      _unsubscribe();
+                    },
+              trailing: _isUnsubscribing
+                  ? const SizedBox(
+                      height: 18,
+                      width: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : null,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: _buildDrawer(),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(

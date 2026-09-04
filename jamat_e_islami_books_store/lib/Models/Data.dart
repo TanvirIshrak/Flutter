@@ -1,11 +1,17 @@
 import 'BookModel.dart';
 
 var categoryData = [
-  {"icon": "Assets/Icons/world.svg", "lebel": "Documentary"},
-  {"icon": "Assets/Icons/star.svg", "lebel": "Games"},
+  {"icon": "Assets/Icons/world.svg", "lebel": "আল-কুরআন"},
+  {"icon": "Assets/Icons/star.svg", "lebel": "আল-হাদিস"},
+  {"icon": "Assets/Icons/star.svg", "lebel": "আল-ফিকহ"},
+  {"icon": "Assets/Icons/star.svg", "lebel": "ঈমান - আকিদাহ"},
+  {"icon": "Assets/Icons/star.svg", "lebel": "দাওয়াত ও তাবলীগ"},
+  {"icon": "Assets/Icons/star.svg", "lebel": "ইসলাম ও ইবাদত"},
+  {"icon": "Assets/Icons/star.svg", "lebel": "আমল-আখলাক ও মু‘আমালাত"},
 
-  {"icon": "Assets/Icons/plane.svg", "lebel": "Travel"},
-  {"icon": "Assets/Icons/heart.svg", "lebel": "Romance"},
+  {"icon": "Assets/Icons/star.svg", "lebel": "ইসলামী আন্দোলন ও সংগঠন"},
+  {"icon": "Assets/Icons/star.svg", "lebel": "পারিবারিক জীবন ও সামাজিক সম্পর্ক"},
+  {"icon": "Assets/Icons/star.svg", "lebel": "সিরাত ও ইতিহাস"},
 ];
 
 var bookData = [
@@ -24,7 +30,7 @@ var bookData = [
     rating: 4.7,
     numberOfRatings: 123,
     pages: 40,
-    category: "Documentary",
+    category: "ঈমান - আকিদাহ",
     price: "Free",
     coverImagePath: "Assets/Images/towhid-risalat-o-akherat.png",
   ),
@@ -43,7 +49,7 @@ var bookData = [
     numberOfRatings: 123,
     pages: 109,
     price: "Free",
-    category: "Documentary",
+    category: "ঈমান - আকিদাহ",
     coverImagePath: "Assets/Images/quraner-charti-moulik-poribhasha.png",
   ),
   BookModel(
@@ -61,7 +67,7 @@ var bookData = [
     numberOfRatings: 123,
     pages: 246,
     price: "Free",
-    category: "Documentary",
+    category: "ঈমান - আকিদাহ",
     coverImagePath: "Assets/Images/islami-shongskritir-mormokotha.png",
   ),
   BookModel(
@@ -79,7 +85,7 @@ var bookData = [
     numberOfRatings: 123,
     pages: 42,
     price: "Free",
-    category: "Documentary",
+    category: "দাওয়াত ও তাবলীগ",
     coverImagePath: "Assets/Images/shotter-sakkhi.png",
   ),
   BookModel(
@@ -97,7 +103,7 @@ var bookData = [
     numberOfRatings: 123,
     pages: 50,
     price: "Free",
-    category: "Documentary",
+    category: "দাওয়াত ও তাবলীগ",
     coverImagePath: "Assets/Images/dayi-ilallah-dawat-ilallah.png",
   ),
   BookModel(
@@ -115,7 +121,7 @@ var bookData = [
     numberOfRatings: 123,
     pages: 42,
     price: "Free",
-    category: "Documentary",
+    category: "দাওয়াত ও তাবলীগ",
     coverImagePath: "Assets/Images/islami-dawat-o-kormoniti.png",
   ),
   BookModel(
@@ -133,7 +139,7 @@ var bookData = [
     numberOfRatings: 123,
     pages: 48,
     price: "Free",
-    category: "Documentary",
+    category: "ইসলাম ও ইবাদত",
     coverImagePath: "Assets/Images/islam-er hakikat.png",
   ),
 
@@ -152,7 +158,7 @@ var bookData = [
     numberOfRatings: 123,
     pages: 63,
     price: "Free",
-    category: "Documentary",
+    category: "ইসলাম ও ইবাদত",
     coverImagePath: "Assets/Images/namaj-rojar hakikat.png",
   ),
   BookModel(
@@ -170,7 +176,7 @@ var bookData = [
     numberOfRatings: 123,
     pages: 49,
     price: "Free",
-    category: "Documentary",
+    category: "ইসলাম ও ইবাদত",
     coverImagePath: "Assets/Images/jakat-er hakikat.png",
   ),
   BookModel(
@@ -188,7 +194,7 @@ var bookData = [
     numberOfRatings: 123,
     pages: 42,
     price: "Free",
-    category: "Documentary",
+    category: "ইসলাম ও ইবাদত",
     coverImagePath: "Assets/Images/hajj-er hakikat.png",
   ),
   BookModel(
@@ -206,7 +212,7 @@ var bookData = [
     numberOfRatings: 123,
     pages: 27,
     price: "Free",
-    category: "Documentary",
+    category: "ইসলাম ও ইবাদত",
     coverImagePath: "Assets/Images/jihad-er hakikat.png",
   ),
   BookModel(
@@ -224,7 +230,7 @@ var bookData = [
     numberOfRatings: 123,
     pages: 112,
     price: "Free",
-    category: "Documentary",
+    category: "ইসলাম ও ইবাদত",
     coverImagePath: "Assets/Images/islam-poricity-resize.png",
   ),
   BookModel(
@@ -242,7 +248,7 @@ var bookData = [
     numberOfRatings: 123,
     pages: 26,
     price: "Free",
-    category: "Documentary",
+    category: "ইসলাম ও ইবাদত",
     coverImagePath: "Assets/Images/shanti poth.png",
   ),
   BookModel(
@@ -260,7 +266,7 @@ var bookData = [
     numberOfRatings: 123,
     pages: 46,
     price: "Free",
-    category: "Documentary",
+    category: "ইসলাম ও ইবাদত",
     coverImagePath: "Assets/Images/islam-er jibon poddhoti.png",
   ),
   BookModel(
@@ -278,7 +284,7 @@ var bookData = [
     numberOfRatings: 123,
     pages: 34,
     price: "Free",
-    category: "Documentary",
+    category: "ইসলাম ও ইবাদত",
     coverImagePath: "Assets/Images/islam-o-jaheliyat-resize.png",
   ),
   BookModel(
@@ -296,7 +302,7 @@ var bookData = [
     numberOfRatings: 123,
     pages: 119,
     price: "Free",
-    category: "Documentary",
+    category: "ইসলাম ও ইবাদত",
     coverImagePath: "Assets/Images/islam-o-andhunik-motobad.png",
   ),
 ];
