@@ -25,7 +25,6 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   get Get => null;
-
   bool _isUnsubscribing = false;
 
   // Posts the user's phone to the BDApps unsubscribe endpoint, then wipes
@@ -179,7 +178,7 @@ class _HomepageState extends State<Homepage> {
                                 ),
                               ),
                               Text(
-                                "Ishrak",
+                                "Dear Learner",
                                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                   color: Theme.of(context).colorScheme.background,
                                 ),

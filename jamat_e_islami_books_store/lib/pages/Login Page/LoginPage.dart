@@ -231,10 +231,10 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Image.asset('Assets/Images/book.png', width: 100, height: 100),
+              Image.asset('Assets/Icons/islamist_logo.png', width: 100, height: 100),
               const SizedBox(height: 20),
               Text(
-                'E-Book',
+                'Islamist',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Colors.green.shade500,

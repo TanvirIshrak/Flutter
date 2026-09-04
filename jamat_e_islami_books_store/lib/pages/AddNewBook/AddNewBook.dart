@@ -190,17 +190,17 @@ class AddNewBook extends StatelessWidget {
                         }),
                         const SizedBox(height: 8),
                         Text(
-                          "Tanvir Ishrak",
+                          "Author",
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(color: cs.background),
                         ),
-                        Text(
-                          "tanvirishrak@gmail.com",
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: cs.onPrimaryContainer.withOpacity(0.6),
-                              ),
-                        ),
+                        // Text(
+                        //   "tanvirishrak@gmail.com",
+                        //   style: Theme.of(context).textTheme.bodySmall
+                        //       ?.copyWith(
+                        //         color: cs.onPrimaryContainer.withOpacity(0.6),
+                        //       ),
+                        // ),
                       ],
                     ),
                   ),

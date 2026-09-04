@@ -160,11 +160,12 @@ class ProfilPage extends StatelessWidget {
                                 width: 150,
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(100),
-                                  child: Image.asset(
-                                    'Assets/Images/self.png',
-                                    fit: BoxFit.cover,
-                                    scale: 1.0,
-                                  ),
+                                  // child: Image.asset(
+                                  //   'Assets/Images/self.png',
+                                  //   fit: BoxFit.cover,
+                                  //   scale: 1.0,
+                                  // ),
+                                  child: Icon(Icons.person, size: 60,),
                                 ),
                               ),
                             ),

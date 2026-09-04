@@ -12,7 +12,7 @@ class HomeAppbar extends StatelessWidget {
       children: [
         SvgPicture.asset("Assets/Icons/dashboard.svg"),
         Text(
-            "E-Book",
+            "Islamist",
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 color: Theme.of(context).colorScheme.background
             )

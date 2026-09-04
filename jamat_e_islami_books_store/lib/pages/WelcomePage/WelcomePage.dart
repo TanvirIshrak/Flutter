@@ -29,7 +29,7 @@ class WelcomePage extends StatelessWidget {
                           width: 300,
                         ),
                         SizedBox(height: 20,),
-                        Text("E-Book store",
+                        Text("Islamist",
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 30,
